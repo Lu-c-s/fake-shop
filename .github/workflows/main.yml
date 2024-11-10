@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 jobs:
   ci:
-    runs-on: ubuntu-lastest
+    runs-on: ubuntu-latest
     steps:
       - name: Obter codigo do projeto
         uses: actions/checkout@v4
@@ -28,7 +28,7 @@ jobs:
             lucas3645/fake-shop:v${{ github.run_number }}      
   cd:
     needs: [ci]
-    runs-on: ubuntu-lastest
+    runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: read
