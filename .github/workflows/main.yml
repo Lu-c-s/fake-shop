@@ -29,10 +29,26 @@ jobs:
   cd:
     needs: [ci]
     runs-on: ubuntu-lastest
+    permissions:
+      id-token: write
+      contents: read
+      actions: read
     steps:
+      - name: Obter codigo do projeto
+        uses: actions/checkout@v4
       - name: Autenticar na AWS
-        run: echo "Executando o Docker Login"
+        uses: actions/checkout@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
       - name: Configurar o kubectl
-        run: echo ""
-      - name: Aplicar os manifestos no Kubernetes
-        run: echo ""
+        run: aws eks update-kubeconfig --name eks-aula
+      - name: Deploy dos manifestos no Kubernetes
+        uses: Azure/k8s-deploy@5
+        with:
+          manifests: |
+            k8s/deployment.yaml
+          images: |
+            lucas3645/fake-shop:v${{ github.run_number }} 
